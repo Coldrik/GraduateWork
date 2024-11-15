@@ -1,0 +1,24 @@
+{% extends "menu.html" %}
+
+{% block content %}
+
+    {% for i in issues_table%}
+<p>&#8226 ID: {{i.id }} | Конструктивная группа: {{i.dwg }} <br> Запрос: {{i.concessionRequest }}
+    <br> Причина: {{i.caseOfProblem }} <br>  Автор запроса: {{i.user}} <br>
+    Проверено: {{i.controlCheck }} <br> Решение: {{i.concessionReport }} <br>
+    Автор решения: {{i.reporter}} <br>
+
+    <button><a href="../add_report/{{ i.id }}">Выдать решение! </a> </button>
+
+</p>
+<form method="post" >
+    {% csrf_token %}
+    <button type="submit" name="main_issue" value= "{{ i.id }}">Подсветить проблему </button>
+</form>
+<p>----------------------------------------------------------------------------</p>
+    {% endfor %}
+<br>
+
+
+
+{% endblock %}

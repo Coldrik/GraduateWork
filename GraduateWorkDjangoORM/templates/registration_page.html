@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <h2>{{error}}</h2>
+    </header>
+    <h1>Форма для регистрации пользователя</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}  <!-- Django автоматически отобразит поля формы, включая выпадающий список -->
+        <button type="submit">Сохранить</button>
+    </form>
+</body>
+</html>

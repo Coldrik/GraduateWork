@@ -1,0 +1,13 @@
+<!-- templates/registration/login.html -->
+{% extends "menu.html" %}
+
+{% block content %}
+  <h2>Вход в систему</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Войти</button>
+  </form>
+
+  <p>Не зарегистрированы? <a href="{% url 'signup' %}">Зарегистрироваться</a></p>
+{% endblock %}

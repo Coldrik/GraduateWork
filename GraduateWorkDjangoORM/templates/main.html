@@ -1,0 +1,17 @@
+{% extends "menu.html" %}
+
+{% block content %}
+
+<h1>Ресурc конструктивно-технической отработки</h1>
+<br>
+<h2>Основная проблема:</h2>
+<br>
+    {% for i in issues_table%}
+<p>&#8226 ID: {{i.id }} | Конструктивная группа: {{i.dwg }} <br> Запрос: {{i.concessionRequest }} | Проверено:
+    {{i.controlCheck }} <br> Причина: {{i.caseOfProblem }} <br> Решение: {{i.concessionReport }} <br>
+    Автор запроса: {{i.user}} <br>
+</p>
+    {% endfor %}
+
+{% endblock %}
+
