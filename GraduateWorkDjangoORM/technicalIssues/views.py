@@ -1,8 +1,13 @@
+from django.db.models import Count
+from django.db.models.functions import Length
 from django.shortcuts import render, redirect, get_object_or_404
 from technicalIssues.forms import ClassOfEngineer, SignUpForm, AddIssue, AddReport
 from technicalIssues.models import *
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
+import time
+from django.http import JsonResponse
+
 # from technicalIssues.forms import SignUpForm
 
 main_issue = 1  # ID запроса, который выбирается как особоважный и выводится на главной странице
@@ -48,7 +53,6 @@ def main_page(request):
         'issues_table': issues_table
     }
     return render(request, 'main.html', context)
-
 
 
 def filter_check(request):  #  Проверенные запросы
@@ -113,6 +117,7 @@ def add_issue_view(request):  #  Внесение данных в таблицу
 
     return render(request, 'add_request.html', {'form': form})
 
+
 @login_required
 def add_report_view(request, request_nb):  #  Внесение данных в таблицу
     '''
@@ -140,12 +145,51 @@ def add_report_view(request, request_nb):  #  Внесение данных в �
     return render(request, 'add_report.html', context)
 
 
-def custom_logout_view(request): # Функция описывающая выход из системы
+def custom_logout_view(request):  # Функция описывающая выход из системы
     '''
     Функция описывающая выход из системы
     '''
     logout(request)
     return redirect('/')
+
+
+def timeOfPerfomance(base, description):
+    start_time = time.time()  # Замеряем время начала выполнения
+    # this_base = base
+    data = list(base)
+    end_time = time.time()  # Замеряем время конца выполнения
+
+    execution_time = end_time - start_time  # Вычисляем время выполнения запроса
+
+    data.append({description: execution_time})  # Добавляем время выполнения в результат JSON
+    print(f"{description}: {execution_time:.20f}")
+    return JsonResponse(data, safe=False, json_dumps_params={'ensure_ascii': False})
+
+def timeOfFullBase(request):
+
+    fullBase = Issues.objects.all().values()
+    description = "execution_time_seconds(FullBase)"
+    return timeOfPerfomance(fullBase, description)
+
+def timeOfFilterBase(request):
+    filterBase = Issues.objects.filter(controlCheck=True).values()
+    description = "execution_time_seconds(FilterBase)"
+    return timeOfPerfomance(filterBase, description)
+
+def timeOfAnnotateBase(request):
+    filterBase = Issues.objects.filter(controlCheck=True) \
+        .annotate(concessionRequest_length=Length('concessionRequest')) \
+        .values()
+    description = "execution_time_seconds(AnnotateBase)"
+    return timeOfPerfomance(filterBase, description)
+
+def timeOfValueBase(request):
+    # filterBase = Issues.objects.values('reporter').annotate(request_count=Count('id'))
+    filterBase = Issues.objects.values('reporter_id') \
+                                 .annotate(request_count=Count('id'))
+
+    description = "execution_time_seconds(ValueBase)"
+    return timeOfPerfomance(filterBase, description)
 
 
 # Резервная информация на дальнейше внедрение
@@ -156,4 +200,3 @@ def custom_logout_view(request): # Функция описывающая вых�
 #
 # # Пример: среднее значение по какому-то полю
 # average_report_count = Issues.objects.aggregate(Avg('reportCount'))
-

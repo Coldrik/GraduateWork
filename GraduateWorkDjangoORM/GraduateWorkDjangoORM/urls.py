@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from technicalIssues.views import (cons_request, main_page, filter_check, signup, filter_report, add_issue_view,
-                                   custom_logout_view, add_report_view)
+                                   custom_logout_view, add_report_view, timeOfFullBase, timeOfFilterBase,
+                                   timeOfAnnotateBase, timeOfValueBase)
 from django.contrib.auth import views as auth_views
 from django.contrib.auth.views import LogoutView
 
@@ -34,4 +35,9 @@ urlpatterns = [
     path('filter/report', filter_report), #  Страница с отображением запросов без решений
     path('add_request', add_issue_view),  # Страница добавления запроса
     path('add_report/<int:request_nb>', add_report_view),  # Страница добавления решения к конкретному запросу
+    path('timeOfFullBase/', timeOfFullBase, name='timeOfFullBase'),
+    path('timeOfFilterBase/', timeOfFilterBase, name='timeOfFilterBase'),
+    path('timeOfAnnotateBase/', timeOfAnnotateBase, name='timeOfAnnotateBase'),
+    path('timeOfValueBase/', timeOfValueBase, name='timeOfValueBase'),
+
 ]
